@@ -45,6 +45,10 @@
       });
 
     function getCode() {
+        var httpRequest;
+        makeRequest();
+
+        function makeRequest() {
             httpRequest = new XMLHttpRequest();
             if (!httpRequest) {
                 alert("Giving up :( Cannot create an XMLHTTP instance");
