@@ -865,7 +865,7 @@ export default {
         surgeForce: false,
         udp: false,
         tfo: false,
-        sort: false,
+        sort: true,
         expand: true,
         scv: false,
         fdn: false,
