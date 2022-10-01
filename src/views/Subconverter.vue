@@ -435,7 +435,7 @@ export default {
           "subconverter作者提供": "https://sub.xeton.dev/sub?",
           "sub-web作者提供": "https://api.wcc.best/sub?",
           "sub作者&lhie1提供": "https://api.dler.io/sub?",
-          "heroku部署": "http://api.asnil.ml/sub?",          
+          "heroku部署": "https://api.asnil.ml/sub?",          
         },
         backendOptions: [
           {value: "http://192.168.123.16:25500/sub?" },   
@@ -448,7 +448,7 @@ export default {
           {value: "https://sub.xeton.dev/sub?"},
           {value: "https://api.wcc.best/sub?"},
           {value: "https://api.dler.io/sub?"},
-          {value: "http://api.asnil.ml/sub?"},          
+          {value: "https://api.asnil.ml/sub?"},          
         ],
         remoteConfig: [
           {
