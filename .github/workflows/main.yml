@@ -2,7 +2,7 @@ name: Docker Image CI
 
 on:
   push:
-    branches: [ master ]
+    branches: [ diy ]
 
 jobs:
 
@@ -36,5 +36,5 @@ jobs:
           platforms: linux/amd64,linux/arm64
           push: true
           tags: |
-            asnil/sub-web-modify:latest
-            asnil/sub-web-modify:${{ steps.date.outputs.today }}         
+            asnil/sub-web-modify-diy:latest
+            asnil/sub-web-modify-diy:${{ steps.date.outputs.today }}         
