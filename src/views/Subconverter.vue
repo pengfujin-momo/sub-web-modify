@@ -436,6 +436,7 @@ export default {
           "sub-web作者提供": "https://api.wcc.best/sub?",
           "sub作者&lhie1提供": "https://api.dler.io/sub?",
           "heroku部署": "https://api.asnil.ml/sub?",          
+          "render部署": "https://api.asnil.tk/sub?",                  
         },
         backendOptions: [
           {value: "http://192.168.123.16:25500/sub?" },   
@@ -449,6 +450,7 @@ export default {
           {value: "https://api.wcc.best/sub?"},
           {value: "https://api.dler.io/sub?"},
           {value: "https://api.asnil.ml/sub?"},          
+          {value: "https://api.asnil.tk/sub?"},               
         ],
         remoteConfig: [
           {
