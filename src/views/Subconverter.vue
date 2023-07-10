@@ -123,8 +123,8 @@
                             <el-col :span="12">
                               <el-checkbox v-model="form.udp" label="启用 UDP"></el-checkbox>
                             </el-col>
-                            <el-col :span="12">
-                              <el-checkbox v-model="form.tls13" label="开启TLS_1.3"></el-checkbox>
+                            <el-col :span="12"> 
+                              <el-checkbox v-model="form.xudp" label="启用 XUDP"></el-checkbox>
                             </el-col>
                           </el-row>
                           <el-row :gutter="10">
@@ -147,8 +147,8 @@
                             <el-col :span="12">
                               <el-checkbox v-model="form.tpl.surge.doh" label="Surge.DoH"></el-checkbox>
                             </el-col>
-                            <el-col :span="12"> 
-                              <el-checkbox v-model="form.surgeForce" label="Surge强制更新"></el-checkbox>
+                            <el-col :span="12">
+                              <el-checkbox v-model="form.tls13" label="开启TLS_1.3"></el-checkbox>
                             </el-col>
                           </el-row>
                           <el-row :gutter="10">
@@ -196,7 +196,7 @@
                 </el-input>
               </el-form-item>
               <el-form-item label="订阅短链:">
-                <el-input class="copy-content" disabled v-model="customShortSubUrl">
+                <el-input class="copy-content" v-model="customShortSubUrl" placeholder="输入自定义短链接后缀，点击生成短链接可反复生成">
                   <el-button
                       slot="append"
                       v-clipboard:copy="customShortSubUrl"
@@ -231,7 +231,7 @@
                     @click="dialogUploadConfigVisible = true"
                     icon="el-icon-upload"
                     :loading="loading"
-                >进阶配置
+                >自定义配置
                 </el-button>
                 <el-button
                     style="width: 120px"
@@ -239,7 +239,7 @@
                     @click="dialogLoadConfigVisible = true"
                     icon="el-icon-copy-document"
                     :loading="loading"
-                >从URL解析</el-button>                
+                >从URL解析</el-button>
               </el-form-item>
               <el-form-item label-width="0px" style="text-align: center">
                 <el-button
@@ -331,7 +331,7 @@
             <el-form-item prop="uploadScript">
               <el-input
                   v-model="uploadScript"
-                  placeholder="使用JavaScript对节点进行自定义排序，本功能后端接口自动模版化，JS无需以挤在一行加换行符的形式输入，注意：如果你还需要自定义上传远程配置，此操作务必在其之后进行，另外，如果你需要同时进行JS排序和筛选节点，二三栏的确定按钮只需要任意按一个即可全部提交！！"
+                  placeholder="本功能暂停使用，如有兴趣，自行去我的GitHub参考sub-web-api项目部署！"
                   type="textarea"
                   :autosize="{ minRows: 15, maxRows: 15}"
                   maxlength="50000"
@@ -357,7 +357,7 @@
             <el-form-item prop="uploadFilter">
               <el-input
                   v-model="uploadFilter"
-                  placeholder="使用JavaScript对节点进行进阶筛选，本功能后端接口自动模版化，JS无需以挤在一行加换行符的形式输入，注意：如果你还需要自定义上传远程配置，此操作务必在其之后进行，另外，如果你需要同时进行JS排序和筛选节点，二三栏的确定按钮只需要任意按一个即可全部提交！"
+                  placeholder="本功能暂停使用，如有兴趣，自行去我的GitHub参考sub-web-api项目部署！"
                   type="textarea"
                   :autosize="{ minRows: 15, maxRows: 15}"
                   maxlength="50000"
@@ -385,7 +385,7 @@
         width="80%"
     >
       <div slot="title">
-        可以从生成的长链接中解析信息,填入页面中去
+        可以从生成的长/短链接中解析信息,填入页面中去
       </div>
       <el-form label-position="left">
         <el-form-item prop="uploadConfig">
@@ -415,7 +415,7 @@ const configScriptBackend = process.env.VUE_APP_CONFIG_UPLOAD_BACKEND + '/api.ph
 const remoteConfigSample = process.env.VUE_APP_SUBCONVERTER_REMOTE_CONFIG
 const scriptConfigSample = process.env.VUE_APP_SCRIPT_CONFIG
 const filterConfigSample = process.env.VUE_APP_FILTER_CONFIG
-const defaultBackend = process.env.VUE_APP_SUBCONVERTER_DEFAULT_BACKEND + '/sub?'
+const defaultBackend = process.env.VUE_APP_SUBCONVERTER_DEFAULT_BACKEND
 const shortUrlBackend = process.env.VUE_APP_MYURLS_DEFAULT_BACKEND + '/short'
 const configUploadBackend = process.env.VUE_APP_CONFIG_UPLOAD_BACKEND + '/sub.php'
 const basicVideo = process.env.VUE_APP_BASIC_VIDEO
@@ -423,7 +423,7 @@ const advancedVideo = process.env.VUE_APP_ADVANCED_VIDEO
 const tgBotLink = process.env.VUE_APP_BOT_LINK
 const yglink = process.env.VUE_APP_YOUTUBE_LINK
 const bzlink = process.env.VUE_APP_BILIBILI_LINK
-const downld = '/download.html'
+const downld = 'http://' + window.location.host + '/download.html'
 export default {
   data() {
     return {
@@ -462,26 +462,22 @@ export default {
           "sub.cm": "https://sub.cm/short",
         },
         customBackend: {
-          "本机后端": "http://127.0.0.1:25500/sub?",
-          "肥羊增强型后端【vless+负载均衡】": "https://api.v1.mk/sub?",
-          "肥羊备用后端【vless+负载均衡】": "https://sub.d1.mk/sub?",
-          "つつ-多地防失联【负载均衡+国内优化】": "https://api.tsutsu.one/sub?",
-          "品云提供后端【实验性】": "https://v.id9.cc/sub?",
-          "nameless13提供": "https://www.nameless13.com/sub?",
-          "subconverter作者提供": "https://sub.xeton.dev/sub?",
-          "sub-web作者提供": "https://api.wcc.best/sub?",
-          "sub作者&lhie1提供": "https://api.dler.io/sub?",                  
+          "肥羊增强型后端【vless+hysteria】": "https://api.v1.mk",
+          "肥羊备用后端【vless+hysteria】": "https://sub.d1.mk",
+          "つつ-多地防失联【负载均衡+国内优化】": "https://api.tsutsu.one",
+          nameless13提供: "https://www.nameless13.com",
+          subconverter作者提供: "https://sub.xeton.dev",
+          "sub-web作者提供": "https://api.wcc.best",
+          "sub作者&lhie1提供": "https://api.dler.io",
         },
         backendOptions: [
-          {value: "http://127.0.0.1:25500/sub?"},
-          {value: "https://api.v1.mk/sub?"},
-          {value: "https://sub.d1.mk/sub?"},
-          {value: "https://api.tsutsu.one/sub?"},
-          {value: "https://v.id9.cc/sub?"},
-          {value: "https://www.nameless13.com/sub?"},
-          {value: "https://sub.xeton.dev/sub?"},
-          {value: "https://api.wcc.best/sub?"},
-          {value: "https://api.dler.io/sub?"},               
+          {value: "https://api.v1.mk"},
+          {value: "https://sub.d1.mk"},
+          {value: "https://api.tsutsu.one"},
+          {value: "https://www.nameless13.com"},
+          {value: "https://sub.xeton.dev"},
+          {value: "https://api.wcc.best"},
+          {value: "https://api.dler.io"},
         ],
         remoteConfig: [
           {
@@ -489,7 +485,7 @@ export default {
             options: [
               {
                 label: "默认",
-                value: "https://raw.githubusercontent.com/Meilieage/webcdn/main/rule/Area_Media_NoAuto.ini"
+                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
               },
               {
                 label: "默认（自动测速）",
@@ -502,6 +498,22 @@ export default {
               {
                 label: "默认（附带用于 Clash 的 AdGuard DNS）",
                 value: "https://gist.githubusercontent.com/tindy2013/1fa08640a9088ac8652dbd40c5d2715b/raw/default_with_clash_adg.yml"
+              },
+              {
+                label: "ACL_全分组 Dream修改版",
+                value: "https://raw.githubusercontent.com/WC-Dream/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Dream.ini"
+              },
+              {
+                label: "ACL_精简分组 Dream修改版",
+                value: "https://raw.githubusercontent.com/WC-Dream/ACL4SSR/master/Clash/config/ACL4SSR_Mini_Dream.ini"
+              },
+              {
+                label: "emby-TikTok-流媒体分组-去广告加强版",
+                value: "https://raw.githubusercontent.com/justdoiting/ClashRule/main/GeneralClashRule.ini"
+              },
+              {
+                 label: "流媒体通用分组",
+                 value: "https://raw.githubusercontent.com/cutethotw/ClashRule/main/GeneralClashRule.ini"
               }
             ]
           },
@@ -549,10 +561,6 @@ export default {
                 value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Netflix.ini"
               },
               {
-                label: "ACL_全分组无测速版",
-                value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini"
-              },
-              {
                 label: "ACL_精简版",
                 value: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Mini.ini"
               },
@@ -580,6 +588,10 @@ export default {
               {
                 label: "常规规则",
                 value: "https://raw.githubusercontent.com/flyhigherpi/merlinclash_clash_related/master/Rule_config/ZHANG.ini"
+              },
+              {
+                label: "酷酷自用",
+                value: "https://raw.githubusercontent.com/xiaoshenxian233/cool/rule/complex.ini"
               },
               {
                 label: "PharosPro无测速",
@@ -697,14 +709,6 @@ export default {
               {
                 label: "ProxyStorage自用",
                 value: "https://unpkg.com/proxy-script/config/Clash/clash.ini"
-              },
-              {
-                label: "ACL_全分组 Dream修改版",
-                value: "https://raw.githubusercontent.com/WC-Dream/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_Dream.ini"
-              },
-              {
-                label: "emby-TikTok-流媒体分组-去广告加强版",
-                value: "https://raw.githubusercontent.com/justdoiting/ClashRule/main/GeneralClashRule.ini"
               }
             ]
           },
@@ -869,9 +873,9 @@ export default {
       form: {
         sourceSubUrl: "",
         clientType: "",
-        customBackend: "https://api.v1.mk/sub?",
+        customBackend: this.getUrlParam() == "" ? "https://api.v1.mk" : this.getUrlParam(),
         shortType: "https://v1.mk/short",
-        remoteConfig: "https://raw.githubusercontent.com/Meilieage/webcdn/main/rule/Area_Media_NoAuto.ini",
+        remoteConfig: "https://raw.githubusercontent.com/ACL4SSR/ACL4SSR/master/Clash/config/ACL4SSR_Online_Full_NoAuto.ini",
         excludeRemarks: "",
         includeRemarks: "",
         filename: "",
@@ -882,10 +886,10 @@ export default {
         nodeList: false,
         extraset: false,
         tls13: false,
-        surgeForce: false,
         udp: false,
+        xudp: false,
         tfo: false,
-        sort: true,
+        sort: false,
         expand: true,
         scv: false,
         fdn: false,
@@ -921,6 +925,7 @@ export default {
     this.isPC = this.$getOS().isPc;
   },
   mounted() {
+    // this.tanchuang();
     this.form.clientType = "clash";
     this.getBackendVersion();
     this.anhei();
@@ -939,6 +944,17 @@ export default {
   methods: {
     selectChanged() {
       this.getBackendVersion();
+    },
+    getUrlParam() {
+      let query = window.location.search.substring(1);
+      let vars = query.split('&');
+      for (let i = 0; i < vars.length; i++) {
+          var pair = vars[i].split('=');
+          if (pair[0] == "backend") {
+              return decodeURIComponent(pair[1]);
+          }
+      }
+      return "";
     },
     anhei() {
       const getLocalTheme = window.localStorage.getItem("localTheme");
@@ -972,6 +988,13 @@ export default {
         window.localStorage.setItem('localTheme', 'light-mode');
       }
     },
+    // tanchuang() {
+    //   this.$alert(`<div style="text-align:center;font-size:10px"><strong><span style="font-size:30px">紧急通知：本站原域名sub.v1.mk被永久墙了，实在无力回天，现在换了新域名</span><span><a href="https://suburl.v1.mk" target="_blank" style="color:red;font-size:30px;text-decoration:none">https://suburl.v1.mk</a></span></strong></br><strong><span style="font-size:10px">本站官方TG交流群：</span><span><a href="https://t.me/feiyangdigital" target="_blank" style="color:red;font-size:10px;text-decoration:none">点击加入</a></span></strong></br><strong><span style="font-size:10px">IEPL高端机场（<span style="color:blue">原生支持各种流媒体</span>）：</span><span><a href="https://www.mcwy.org" style="color:red;font-size:10px;text-decoration:none">点击注册</a></span></strong></br><strong><span style="font-size:10px">奈飞、ChatGPT合租（<span style="color:blue">优惠码：feiyang</span>）：</span><span><a href="https://www.nfvideo.cc" style="color:red;font-size:10px;text-decoration:none">点击上车</a></span></strong></br><strong><span style="font-size:10px">IOS外区应用代购：</span><span><a href="https://fk.myue.club" style="color:red;font-size:10px;text-decoration:none">点击查看</a></span></strong></br><strong><span style="font-size:10px">牧场流媒体支持状态实时检测图：</span><span><a href="https://nf.mccloud.vip" style="color:red;font-size:10px;text-decoration:none">点击查看</a></span></strong></br>本站服务器赞助机场-牧场物语，是一家拥有BGP中继+IEPL企业级内网专线的高端机场，适合各个价位要求的用户，牧场物语采用最新的奈飞非自制剧解决方案，出口随机更换IP，确保尽可能的每个用户可以用上独立IP，以此来稳定解决奈飞非自制剧的封锁，并推出7*24小时奈飞非自制剧节点自动检测系统，用户再也不用自己手动一个个的乱试节点了，目前牧场的新加坡，台湾等节区域点均可做到24H稳定非自制剧观看！</br></div>`, '信息面板', {
+    //     confirmButtonText: '确定',
+    //     dangerouslyUseHTMLString: true,
+    //     customClass: 'msgbox'
+    //   });
+    // },
     onCopy() {
       this.$message.success("已复制");
     },
@@ -1025,7 +1048,7 @@ export default {
       sourceSub = sourceSub.replace(/(\n|\r|\n\r)/g, "|");
       this.customSubUrl =
           backend +
-          "target=" +
+          "/sub?target=" +
           this.form.clientType +
           "&url=" +
           encodeURIComponent(sourceSub) +
@@ -1067,10 +1090,6 @@ export default {
         this.customSubUrl +=
             "&tls13=" + this.form.tls13.toString();
       }
-      if (this.form.surgeForce) {
-        this.customSubUrl +=
-            "&strict=" + this.form.surgeForce.toString();
-      }
       if (this.form.sort) {
         this.customSubUrl +=
             "&sort=" + this.form.sort.toString();
@@ -1080,6 +1099,8 @@ export default {
           this.form.emoji.toString() +
           "&list=" +
           this.form.nodeList.toString() +
+          "&xudp=" +
+          this.form.xudp.toString() +
           "&udp=" +
           this.form.udp.toString() +
           "&tfo=" +
@@ -1110,6 +1131,9 @@ export default {
       this.loading = true;
       let data = new FormData();
       data.append("longUrl", btoa(this.customSubUrl));
+      if (this.customShortSubUrl.trim() != "") {
+          data.append("shortKey",this.customShortSubUrl.trim().indexOf("http") < 0 ? this.customShortSubUrl.trim() : "");
+      }
       this.$axios
           .post(duan, data, {
             header: {
@@ -1161,19 +1185,40 @@ export default {
             this.loading = false;
           });
     },
-    confirmLoadConfig() {
-      if (this.loadConfig.indexOf("target")=== -1){
-        this.$message.error("请输入正确的订阅地址,暂不支持短链接!");
-        return;
+    analyzeUrl() {
+      if (this.loadConfig.indexOf("target") !== -1) {
+        return this.loadConfig;
+      } else {
+        this.loading = true;
+        return (async () => {
+          try {
+            let response = await fetch(this.loadConfig, {
+              method: "GET",
+              redirect: "follow",
+            });
+            return response.url;
+          } catch (e) {
+            this.$message.error("解析短链接失败，请检查短链接服务端是否配置跨域：" + e)
+          } finally {
+            this.loading = false;
+          }
+        })();
       }
+    },
+    confirmLoadConfig() {
+      if (this.loadConfig.trim() === ""){
+        this.$message.error("订阅链接不能为空");
+        return false;
+      }
+      (async () => {
       let url
       try {
-        url = new URL(this.loadConfig)
+        url = new URL(await this.analyzeUrl())
       } catch (error) {
         this.$message.error("请输入正确的订阅地址!");
         return;
       }
-      this.form.customBackend = url.origin + url.pathname + "?"
+      this.form.customBackend = url.origin
       let param = new URLSearchParams(url.search);
       if (param.get("target")){
         let target = param.get("target");
@@ -1221,8 +1266,8 @@ export default {
       if (param.get("tls13")){
         this.form.tls13 = param.get("tls13");
       }
-      if (param.get("strict")){
-        this.form.surgeForce = param.get("strict");
+      if (param.get("xudp")){
+        this.form.xudp = param.get("xudp") === 'true';
       }
       if (param.get("sort")){
         this.form.sort = param.get("sort") === 'true';
@@ -1258,6 +1303,8 @@ export default {
         this.form.new_name = param.get("new_name") === 'true';
       }
       this.dialogLoadConfigVisible = false;
+      this.$message.success("长/短链接已成功解析为订阅信息");
+    })();
     },
     renderPost() {
       let data = new FormData();
@@ -1268,7 +1315,7 @@ export default {
       data.append("include",encodeURIComponent(this.form.includeRemarks));
       data.append("rename",encodeURIComponent(this.form.rename));
       data.append("tls13",encodeURIComponent(this.form.tls13.toString()));
-      data.append("surgeForce",encodeURIComponent(this.form.surgeForce.toString()));
+      data.append("xudp",encodeURIComponent(this.form.xudp.toString()));
       data.append("emoji",encodeURIComponent(this.form.emoji.toString()));
       data.append("list",encodeURIComponent(this.form.nodeList.toString()));
       data.append("udp",encodeURIComponent(this.form.udp.toString()));
@@ -1319,15 +1366,14 @@ export default {
     getBackendVersion() {
       this.$axios
           .get(
-              this.form.customBackend.substring(0, this.form.customBackend.length - 5) + "/version"
+              this.form.customBackend + "/version"
           )
           .then(res => {
             this.backendVersion = res.data.replace(/backend\n$/gm, "");
             this.backendVersion = this.backendVersion.replace("subconverter", "SubConverter");
             let a = this.form.customBackend.indexOf("api.v1.mk") !== -1 || this.form.customBackend.indexOf("sub.d1.mk") !== -1;
-            let b = this.form.customBackend.indexOf("v.id9.cc") !== -1;
-            let c = this.form.customBackend.indexOf("127.0.0.1") !== -1;
-            a ? this.$message.success(`${this.backendVersion}` + "肥羊负载均衡加强后端支持vless+trojan xtls订阅转换") : b ? this.$message.success(`${this.backendVersion}` + "品云实验性后端支持vless+trojan xtls订阅转换") : c ? this.$message.success(`${this.backendVersion}` + "本地局域网自建版后端") : this.$message.success(`${this.backendVersion}` + "官方原版后端不支持vless/trojan xtls订阅转换");
+            let b = this.form.customBackend.indexOf("127.0.0.1") !== -1;
+            a ? this.$message.success(`${this.backendVersion}` + "肥羊负载均衡增强版后端，已屏蔽免费节点池（会返回403），额外支持vless+hysteria订阅转换") : b ? this.$message.success(`${this.backendVersion}` + "本地局域网自建版后端") : this.$message.success(`${this.backendVersion}` + "官方原版后端不支持vless/hysteria订阅转换");
           })
           .catch(() => {
             this.$message.error("请求SubConverter版本号返回数据失败，该后端不可用！");
