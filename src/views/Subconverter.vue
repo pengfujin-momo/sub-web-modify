@@ -35,7 +35,7 @@
                     allow-create
                     filterable
                     @change="selectChanged"
-                    placeholder="可输入自己的后端"
+                    placeholder="lzw.x3322.net:25500"
                     style="width: 100%"
                 >
                   <el-option v-for="(v, k) in options.customBackend" :key="k" :label="k" :value="v"></el-option>
